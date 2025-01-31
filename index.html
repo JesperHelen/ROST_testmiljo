@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Marker App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet.js CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo"><img src="icons/logo.png" alt="Logo" class="logo-img"></div>
+        <div class="title-box">City name</div>
+    </div>
+
+    <!-- Left Panel -->
+    <div class="left-panel">
+        <h2>Select Marker</h2>
+        <div class="marker-options-container">
+            <div class="marker-options">
+                <button class="marker-btn green" data-color="green">Green</button>
+                <button class="marker-btn yellow" data-color="yellow">Yellow</button>
+                <button class="marker-btn red" data-color="red">Red</button>
+            </div>
+            <textarea class="message-box" placeholder="Write your message..."></textarea>
+        </div>
+        <button class="send-btn">Send</button>
+    </div>
+    
+
+    <!-- Map Area -->
+    <div id="map" class="map-container"></div>
+
+    <!-- JavaScript File -->
+    <script src="script.js"></script>
+    <!-- Notification Popup -->
+    <div id="notification" class="notification"></div>
+    <!-- Powered by Icon -->
+    <img src="icons/powered.png" alt="Powered by" class="powered-icon">
+</body>
+</html>

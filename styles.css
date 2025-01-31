@@ -1,0 +1,264 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #455a64; /* Dark Gray */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden; /* Prevent unwanted scrolling */
+}
+
+/* Top Bar */
+.top-bar {
+    background-color: #37474f; /* Dark Gray */
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px; /* Fixed height */
+    z-index: 100; /* Keeps it on top */
+}
+.logo-img {
+    height: 50px; /* 80% of the height of the top bar */
+    width: auto; /* Maintain aspect ratio */
+    display: block;
+}
+.powered-icon {
+    position: absolute; /* Position inside the map */
+    bottom: 20px; /* Adjust to be above the bottom */
+    left: 320px; /* Just to the right of the left panel (which is 260px wide) */
+    opacity: 0.8; /* 80% transparency */
+    height: 40px; /* Default height */
+    max-height: 10%; /* Max 10% of map height */
+    width: auto; /* Maintain aspect ratio */
+    z-index: 1000; /* Ensure it's above the map */
+    pointer-events: none; /* Prevents blocking interactions */
+}
+
+
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ffb300; /* Yellow */
+}
+
+.title-box {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: #ffffff; /* Soft Yellow */
+    /*background: rgba(194, 1, 1, 0.2);*/
+    padding: 12px;
+    border-radius: 8px;
+}
+
+/* Left Panel */
+.left-panel {
+    position: fixed; /* Ensure it stays in place */
+    left: 0;
+    top: 60px; /* Below the top bar */
+    width: 260px;
+    background-color: #37474f; /* Dark Gray */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 3px solid #ffca28; /* Yellow Border */
+    height: calc(100vh - 60px); /* Take full height minus the top bar */
+    border-radius: 0 10px 10px 0;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 50;
+}
+
+h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffca28; /* Highlight Yellow */
+    margin-bottom: 15px;
+}
+
+/* Marker Buttons */
+.marker-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.marker-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s ease-in-out;
+}
+
+.green {
+    background-color: #66bb6a; /* Green */
+}
+
+.yellow {
+    background-color: #ffca28; /* Yellow */
+}
+
+.red {
+    background-color: #ef5350; /* Red */
+}
+
+.marker-btn:hover {
+    opacity: 0.85;
+    transform: scale(1.05);
+}
+/* Highlight selected marker button */
+.marker-btn.selected {
+    border: 3px solid white;
+    outline: 2px solid currentColor; /* Matches button color */
+    transform: scale(1.1); /* Slight enlargement */
+    font-weight: bold;
+}
+
+/* Message Box */
+.message-box {
+    width: 100%;
+    height: 100px;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 2px solid #ffca28; /* Yellow Border */
+    background-color: #fff;
+    color: #000;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Send Button */
+.send-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    background-color: #ffb300; /* Deep Yellow */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.send-btn:hover {
+    background-color: #ffca28; /* Lighter Yellow */
+    transform: scale(1.05);
+}
+/* Notification box */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #ffca28; /* Yellow */
+    color: #37474f; /* Dark gray text */
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    display: none; /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 200; /* Make sure it's above other elements */
+}
+
+
+/* Default Layout (For larger screens) */
+.map-container {
+    position: absolute;
+    top: 60px; /* Below the top bar */
+    left: 260px; /* Next to the left panel */
+    width: calc(100% - 260px); /* Adjust width */
+    height: calc(100vh - 60px); /* Adjust height */
+    z-index: 1;
+}
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    /* Move the left panel to the bottom */
+    .left-panel {
+        position: fixed;
+        top: unset;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 200px; /* Default height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto; /* Enable vertical scrolling if needed */
+        border-right: none;
+        border-top: 3px solid #ffca28; /* Yellow Border */
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        z-index: 100;
+    }
+
+    /* Ensure the map takes up the remaining space above the left panel */
+    .map-container {
+        position: fixed;
+        top: 60px; /* Below the top bar */
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 260px); /* Deduct left panel height */
+        z-index: 1;
+    }
+
+    /* Layout adjustments */
+    .marker-options-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 90%;
+    }
+
+    .marker-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 45%;
+    }
+
+    .marker-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    /* Textbox to the right */
+    .message-box {
+        width: 45%;
+        height: 80px;
+    }
+
+    /* Send button at the bottom center */
+    .send-btn {
+        width: 50%;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 10px;
+        align-self: center;
+    }
+
+    .powered-icon {
+        position: absolute; /* Position inside the map */
+        bottom: 230px; /* Adjust to be above the bottom */
+        left: 20px; /* Just to the right of the left panel (which is 260px wide) */
+    }
+}
+
