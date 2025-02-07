@@ -242,6 +242,7 @@ h2 {
 
     /* Textbox to the right */
     .message-box {
+        margin-left:5px;
         width: 45%;
         height: 80px;
     }
