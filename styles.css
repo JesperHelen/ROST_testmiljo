@@ -12,7 +12,7 @@ body {
 
 /* Top Bar */
 .top-bar {
-    background-color: #37474f; /* Dark Gray */
+    background-color: #000000; /* Dark Gray */
     padding: 15px 25px;
     display: flex;
     align-items: center;
