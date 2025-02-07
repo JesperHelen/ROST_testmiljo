@@ -201,7 +201,7 @@ h2 {
         display: flex;
         flex-direction: column;
         align-items: center;
-        overflow-y: auto; /* Enable vertical scrolling if needed */
+       
         border-right: none;
         border-top: 3px solid #ffca28; /* Yellow Border */
         border-radius: 10px 10px 0 0;
