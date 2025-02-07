@@ -104,17 +104,21 @@ h2 {
     cursor: pointer;
     border-radius: 6px;
     transition: 0.2s ease-in-out;
+    height:auto;
 }
 
 .green {
+    height:auto;
     background-color: #66bb6a; /* Green */
 }
 
 .yellow {
+    height:auto;
     background-color: #ffca28; /* Yellow */
 }
 
 .red {
+    height:auto;
     background-color: #ef5350; /* Red */
 }
 
@@ -132,7 +136,7 @@ h2 {
 
 /* Message Box */
 .message-box {
-    width: 100%;
+    width: 90%;
     height: 100px;
     margin-top: 20px;
     padding: 12px;
@@ -146,6 +150,7 @@ h2 {
 
 /* Send Button */
 .send-btn {
+    height:auto;
     margin-top: 20px;
     width: 100%;
     padding: 12px;
