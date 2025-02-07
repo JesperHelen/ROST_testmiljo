@@ -62,13 +62,13 @@ body {
 
 /* Left Panel */
 .left-panel {
-    overflow-y: auto;
     position: fixed; /* Ensure it stays in place */
     left: 0;
     top: 60px; /* Below the top bar */
     width: 260px;
     background-color: #37474f; /* Dark Gray */
     padding: 20px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
