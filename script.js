@@ -120,6 +120,8 @@ document.querySelector(".send-btn").addEventListener("click", async () => {
         showNotification("Thank you! Your feedback has been submitted.");
 
 
+
+
     }, () => {
         alert("Unable to retrieve your location");
     });
