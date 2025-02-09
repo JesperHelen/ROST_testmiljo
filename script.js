@@ -119,10 +119,6 @@ document.querySelector(".send-btn").addEventListener("click", async () => {
         // Show confirmation popup
         showNotification("Thank you! Your feedback has been submitted.");
 
-        // Clear the text area and reset opinion
-        document.querySelector(".message-box").value = "";
-        selectedOpinion = ""; 
-        document.querySelectorAll(".marker-btn").forEach(btn => btn.classList.remove("selected"));
 
     }, () => {
         alert("Unable to retrieve your location");
