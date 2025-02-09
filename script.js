@@ -24,6 +24,18 @@ markerButtons.forEach(button => {
         selectedColor = this.dataset.color;
     });
 });
+document.addEventListener("DOMContentLoaded", function() {
+    const helpIcon = document.querySelector(".help-icon");
+    const tooltip = document.querySelector(".tooltip");
+
+    helpIcon.addEventListener("mouseover", function() {
+        tooltip.style.display = "block";
+    });
+
+    helpIcon.addEventListener("mouseout", function() {
+        tooltip.style.display = "none";
+    });
+});
 
 // Event listener for clicking on the map
 map.on('click', function (event) {

@@ -27,11 +27,12 @@ body {
     z-index: 100; /* Keeps it on top */
 }
 .logo-img {
-    height: 50px; /* 80% of the height of the top bar */
-    width: 50px;
+    height: 45px; /* 80% of the height of the top bar */
+    width: 45px;
     overflow: hidden;
     border-radius: 50%; 
     margin-top:10px;
+    border: 3px solid #fff;
 }
 .powered-icon {
     position: absolute; /* Position inside the map */
@@ -62,7 +63,40 @@ body {
     padding: 12px;
     border-radius: 8px;
 }
+.help-icon {
+    background-color: #ffca28;
+    color: #37474f;
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    margin-right: 40px;
+    position: relative;
+}
 
+.tooltip {
+    position: fixed;
+    top: 40px;
+    right: 20px;
+    background-color: #ffca28;
+    color: #37474f;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    display: none;
+    white-space: nowrap;
+    max-width:25px;
+    z-index: 200;
+    max-width: 90vw; /* Ensures it doesn't exceed viewport width */
+    word-wrap: break-word; /* Allows wrapping on small screens */
+}
 /* Ensure the left panel is always scrollable */
 .left-panel {
     position: fixed;
@@ -200,6 +234,14 @@ h2 {
     z-index: 1;
 }
 @media screen and (max-width: 768px) and (orientation: portrait) {
+
+
+    .tooltip {
+        right: 10px; /* Ensures it doesn't overflow on smaller screens */
+        left: auto;
+        font-size: 12px;
+        padding: 6px 10px;
+    }
     /* Move the left panel to the bottom */
     .left-panel {
         position: fixed;
