@@ -28,8 +28,10 @@ body {
 }
 .logo-img {
     height: 50px; /* 80% of the height of the top bar */
-    width: auto; /* Maintain aspect ratio */
-    display: block;
+    width: 50px;
+    overflow: hidden;
+    border-radius: 50%; 
+    margin-top:10px;
 }
 .powered-icon {
     position: absolute; /* Position inside the map */
@@ -61,7 +63,7 @@ body {
     border-radius: 8px;
 }
 
-/* Left Panel */
+/* Ensure the left panel is always scrollable */
 .left-panel {
     position: fixed;
     left: 0;
@@ -69,17 +71,16 @@ body {
     width: 260px;
     background-color: #37474f;
     padding: 20px;
-    overflow-y: auto; /* Ensure scrolling */
+    overflow-y: auto; /* Allow scrolling if needed */
     display: flex;
     flex-direction: column;
     align-items: center;
     border-right: 3px solid #ffca28;
-    height: calc(100vh); /* Fix height */
+    height: calc(100vh - 60px); /* Ensure it takes full height minus top bar */
     border-radius: 0 10px 10px 0;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
     z-index: 50;
 }
-
 
 h2 {
     font-size: 22px;
@@ -151,8 +152,6 @@ h2 {
 
 /* Send Button */
 .send-btn {
-    height:auto;
-    margin-top: 20px;
     width: 100%;
     padding: 12px;
     font-size: 18px;
@@ -162,6 +161,10 @@ h2 {
     border-radius: 6px;
     cursor: pointer;
     transition: 0.2s ease-in-out;
+    margin-top: 30px; /* Push to bottom */
+    margin-bottom: 60px; /* Ensure spacing below */
+    margin-left:30px;
+    margin-left:auto;
 }
 
 .send-btn:hover {
@@ -250,7 +253,7 @@ h2 {
 
     /* Textbox to the right */
     .message-box {
-        margin-left:5px;
+        margin-left:55px;
         width: 45%;
         height: 80px;
     }
