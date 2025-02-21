@@ -14,16 +14,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const markerButtons = document.querySelectorAll('.marker-btn');
 markerButtons.forEach(button => {
     button.addEventListener('click', function () {
-        // Remove "selected" class from all buttons
         markerButtons.forEach(btn => btn.classList.remove('selected'));
-
-        // Add "selected" class to the clicked button
         this.classList.add('selected');
-
-        // Update selected color based on button's dataset
         selectedColor = this.dataset.color;
     });
 });
+
+// Help icon hover event
 document.addEventListener("DOMContentLoaded", function() {
     const helpIcon = document.querySelector(".help-icon");
     const tooltip = document.querySelector(".tooltip");
@@ -37,29 +34,31 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// Event listener for clicking on the map
-map.on('click', function (event) {
+// Event listener for clicking on the map (adds marker & stores coordinates)
+map.on("click", function (event) {
     selectedCoordinates = {
-        lat: event.latlng.lat.toFixed(6),
-        lng: event.latlng.lng.toFixed(6)
+        lat: parseFloat(event.latlng.lat.toFixed(6)), // Ensure decimal format
+        lng: parseFloat(event.latlng.lng.toFixed(6))
     };
-    let message = document.querySelector('.message-box').value.trim(); // Get user message
-    console.log("📍 Marker placed at:", selectedCoordinates);
 
-    // Remove any existing markers before adding a new one
+    let message = document.querySelector('.message-box').value.trim(); 
+
+    console.log("📍 Marker placed at:", selectedCoordinates); // Debugging: Check if this logs correctly
+
+    // Remove existing markers
     map.eachLayer(function (layer) {
         if (layer instanceof L.CircleMarker) {
             map.removeLayer(layer);
         }
     });
 
-    // Add a new custom circle marker at the clicked position
+    // Add a new marker
     L.circleMarker([selectedCoordinates.lat, selectedCoordinates.lng], {
-        radius: 8, // Small dot size
-        fillColor: getColor(selectedColor), // Get the selected button color
-        color: 'white', // White outline
-        weight: 2, // Outline thickness
-        fillOpacity: 1 // Solid fill
+        radius: 8,
+        fillColor: getColor(selectedColor),
+        color: 'white',
+        weight: 2,
+        fillOpacity: 1
     }).addTo(map)
     .bindPopup(`<b>Opinion:</b> ${selectedColor}<br><b>Message:</b> ${message}`)
     .openPopup();
@@ -75,68 +74,65 @@ function getColor(color) {
     return colors[color] || '#fff';
 }
 
+// Google Sheets URL
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzJCJPW8hR94ufFarxo8JAQYfXOLDquQ4Kaqtu4N_CZzTeDpYXld997IJevkhDJxG8/exec";
+
 let selectedOpinion = ""; // Store the selected opinion
 
 // Select all marker buttons
 document.querySelectorAll(".marker-btn").forEach(button => {
     button.addEventListener("click", (event) => {
-        // Remove 'selected' class from all buttons
         document.querySelectorAll(".marker-btn").forEach(btn => btn.classList.remove("selected"));
-
-        // Add 'selected' class to clicked button
         event.target.classList.add("selected");
-
-        // Store the opinion from the clicked button
         selectedOpinion = event.target.getAttribute("data-color");
-
-        console.log("Opinion selected:", selectedOpinion); // Debugging
+        console.log("Opinion selected:", selectedOpinion);
     });
 });
 
-// Send button event listener
+// ✅ FIXED: Now sends the pinned location instead of user's geolocation
 document.querySelector(".send-btn").addEventListener("click", async () => {
     console.log("Send button clicked!");
-    map.eachLayer(function (layer) {
-        if (layer instanceof L.CircleMarker) {
-            map.removeLayer(layer);
-        }
-    });
-    const message = document.querySelector(".message-box").value;
 
     if (!selectedOpinion) {
         alert("Please select an opinion before submitting!");
         return;
     }
 
-    if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser");
+    if (!selectedCoordinates) {
+        alert("Please place a marker on the map before submitting!");
         return;
     }
 
-    navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
+    const { lat, lng } = selectedCoordinates;
+    const message = document.querySelector(".message-box").value.trim();
 
-        console.log("Sending data:", { latitude, longitude, message, opinion: selectedOpinion });
+    console.log("Sending data:", { latitude: lat, longitude: lng, message, opinion: selectedOpinion });
 
-        const response = await fetch(GOOGLE_SHEETS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            mode: "no-cors",
-            body: JSON.stringify({ latitude, longitude, message, opinion: selectedOpinion }),
-        });
-
-        console.log("Data sent successfully!");
-
-        // Show confirmation popup
-        showNotification("Thank you! Your feedback has been submitted.");
-
-
-
-
-    }, () => {
-        alert("Unable to retrieve your location");
+    const response = await fetch(GOOGLE_SHEETS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        mode: "no-cors",
+        body: JSON.stringify({ latitude: lat, longitude: lng, message, opinion: selectedOpinion }),
     });
+
+    console.log("Data sent successfully!");
+
+    // ✅ Remove all markers after submission
+    map.eachLayer(function (layer) {
+        if (layer instanceof L.CircleMarker) {
+            map.removeLayer(layer);
+        }
+    });
+
+    selectedCoordinates = null; // Reset selection
+
+    // ✅ Show confirmation popup
+    showNotification("Thank you! Your feedback has been submitted.");
+
+    // ✅ Reset input fields
+    document.querySelector(".message-box").value = "";
+    // selectedOpinion = "";
+    // document.querySelectorAll(".marker-btn").forEach(btn => btn.classList.remove("selected"));
 });
 
 // Function to show a popup notification
