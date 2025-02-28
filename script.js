@@ -1,3 +1,22 @@
+// Function to update favicon based on theme
+function updateFavicon() {
+    const favicon = document.getElementById("favicon");
+    const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (darkMode) {
+        favicon.href = "icons/favicon_white.png"; // Dark mode favicon
+    } else {
+        favicon.href = "icons/favicon_black.png"; // Light mode favicon
+    }
+}
+
+// Run function on page load
+updateFavicon();
+
+// Detect theme changes and update favicon
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateFavicon);
+
+
 // Declare global variables
 let selectedCoordinates = null;
 let selectedColor = 'Other'; // Default marker color
@@ -34,45 +53,70 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// Event listener for clicking on the map (adds marker & stores coordinates)
-map.on("click", function (event) {
-    selectedCoordinates = {
-        lat: parseFloat(event.latlng.lat.toFixed(6)), // Ensure decimal format
-        lng: parseFloat(event.latlng.lng.toFixed(6))
-    };
+// Global variable to store the current marker
+let currentMarker = null;
 
-    let message = document.querySelector('.message-box').value.trim(); 
+// Helper function to determine the opinion color
+function getOpinionColor(opinion) {
+  if (opinion === "Neutral") return "#ffca28";
+  if (opinion === "Negative") return "#ef5350";
+  return "#66bb6a"; // Default to Positive color
+}
 
-    console.log("📍 Marker placed at:", selectedCoordinates); // Debugging: Check if this logs correctly
+// When the map is clicked to add a marker:
+map.on('click', function(e) {
+  // Set the selected coordinates
+  selectedCoordinates = e.latlng;
 
-    // Remove existing markers
-    map.eachLayer(function (layer) {
-        if (layer instanceof L.CircleMarker) {
-            map.removeLayer(layer);
-        }
-    });
+  // If no opinion is selected, default to "Positive" and update the UI:
+  if (!selectedOpinion) {
+    selectedOpinion = "Positive";
+    document.querySelectorAll('.marker-btn').forEach(btn => btn.classList.remove("selected"));
+    const positiveBtn = document.querySelector('.marker-btn.green');
+    if (positiveBtn) positiveBtn.classList.add("selected");
+  }
 
-    // Add a new marker
-    L.circleMarker([selectedCoordinates.lat, selectedCoordinates.lng], {
-        radius: 8,
-        fillColor: getColor(selectedColor),
-        color: 'white',
-        weight: 2,
-        fillOpacity: 1
-    }).addTo(map)
-    .bindPopup(`<b>Opinion:</b> ${selectedColor}<br><b>Message:</b> ${message}`)
-    .openPopup();
+  // Determine the opinion color
+  const opinionColor = getOpinionColor(selectedOpinion);
+
+  // Remove any existing marker (if only one is allowed)
+  if (currentMarker) {
+    map.removeLayer(currentMarker);
+  }
+
+  // Get the current text from the message box
+  const messageBox = document.querySelector(".message-box");
+  const commentText = messageBox.value.trim() || "No comment provided";
+
+  // Build the popup content with bold labels using the opinion's color
+  const popupContent = "<strong style='color: " + opinionColor + ";'>Opinion:</strong> " 
+                       + selectedOpinion + "<br><strong style='color: " + opinionColor + ";'>Comment:</strong> " 
+                       + commentText;
+
+  // Add a new marker with a white border and fill color based on the opinion
+  currentMarker = L.circleMarker(e.latlng, {
+    radius: 8,
+    color: "#fff",      // White border
+    weight: 2,
+    fillColor: opinionColor,
+    fillOpacity: 1
+  }).addTo(map);
+  currentMarker.bindPopup(popupContent).openPopup();
 });
 
-// Function to map button colors to actual hex values
-function getColor(color) {
-    const colors = {
-        'Positive': '#66bb6a',
-        'Neutral': '#ffca28',
-        'Negative': '#ef5350'
-    };
-    return colors[color] || '#fff';
-}
+// Listen for input changes in the message box to update the marker's popup
+document.querySelector(".message-box").addEventListener("input", function() {
+  if (currentMarker && currentMarker.getPopup()) {
+    const newComment = this.value.trim() || "No comment provided";
+    const opinionColor = getOpinionColor(selectedOpinion);
+    const updatedContent = "<strong style='color: " + opinionColor + ";'>Opinion:</strong> " 
+                           + selectedOpinion + "<br><strong style='color: " + opinionColor + ";'>Comment:</strong> " 
+                           + newComment;
+    currentMarker.getPopup().setContent(updatedContent);
+  }
+});
+
+
 
 // Google Sheets URL
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzJCJPW8hR94ufFarxo8JAQYfXOLDquQ4Kaqtu4N_CZzTeDpYXld997IJevkhDJxG8/exec";
@@ -103,37 +147,46 @@ document.querySelector(".send-btn").addEventListener("click", async () => {
         return;
     }
 
-    const { lat, lng } = selectedCoordinates;
-    const message = document.querySelector(".message-box").value.trim();
+    // Show the loading indicator immediately
+    const loader = document.getElementById("loadingIndicator");
+    loader.style.display = "flex";
 
-    console.log("Sending data:", { latitude: lat, longitude: lng, message, opinion: selectedOpinion });
+    try {
+        const { lat, lng } = selectedCoordinates;
+        const message = document.querySelector(".message-box").value.trim();
 
-    const response = await fetch(GOOGLE_SHEETS_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        mode: "no-cors",
-        body: JSON.stringify({ latitude: lat, longitude: lng, message, opinion: selectedOpinion }),
-    });
+        console.log("Sending data:", { latitude: lat, longitude: lng, message, opinion: selectedOpinion });
 
-    console.log("Data sent successfully!");
+        const response = await fetch(GOOGLE_SHEETS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            mode: "no-cors",
+            body: JSON.stringify({ latitude: lat, longitude: lng, message, opinion: selectedOpinion }),
+        });
 
-    // ✅ Remove all markers after submission
-    map.eachLayer(function (layer) {
-        if (layer instanceof L.CircleMarker) {
-            map.removeLayer(layer);
-        }
-    });
+        console.log("Data sent successfully!");
 
-    selectedCoordinates = null; // Reset selection
+        // Remove all markers after submission
+        map.eachLayer(function (layer) {
+            if (layer instanceof L.CircleMarker) {
+                map.removeLayer(layer);
+            }
+        });
+        selectedCoordinates = null; // Reset selection
 
-    // ✅ Show confirmation popup
-    showNotification("Thank you! Your feedback has been submitted.");
+        // Show confirmation popup
+        showNotification("Thank you! Your feedback has been submitted.");
 
-    // ✅ Reset input fields
-    document.querySelector(".message-box").value = "";
-    // selectedOpinion = "";
-    // document.querySelectorAll(".marker-btn").forEach(btn => btn.classList.remove("selected"));
+        // Reset input field
+        document.querySelector(".message-box").value = "";
+    } catch (error) {
+        console.error("Error sending data:", error);
+    } finally {
+        // Remove the loading indicator regardless of success or error
+        loader.style.display = "none";
+    }
 });
+
 
 // Function to show a popup notification
 function showNotification(text) {
