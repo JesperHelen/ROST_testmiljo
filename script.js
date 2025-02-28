@@ -117,6 +117,48 @@ document.querySelector(".message-box").addEventListener("input", function() {
 });
 
 
+// Update opinion selection dynamically and refresh the marker
+document.querySelectorAll(".marker-btn").forEach(button => {
+    button.addEventListener("click", function () {
+        document.querySelectorAll(".marker-btn").forEach(btn => btn.classList.remove("selected"));
+        this.classList.add("selected");
+        selectedOpinion = this.getAttribute("data-color");
+
+        console.log("Opinion updated:", selectedOpinion);
+
+
+        // ✅ Remove and re-add the marker with updated opinion
+        if (currentMarker && selectedCoordinates) {
+            map.removeLayer(currentMarker); // Remove old marker
+
+            const newComment = document.querySelector(".message-box").value.trim() || "No comment provided";
+            const opinionColor = getColor(selectedOpinion); // ✅ Now correctly defined!
+
+            // ✅ Add new marker with updated color & opinion
+            currentMarker = L.circleMarker([selectedCoordinates.lat, selectedCoordinates.lng], {
+                radius: 8,
+                fillColor: opinionColor,
+                color: 'white',
+                weight: 2,
+                fillOpacity: 1
+            }).addTo(map)
+            .bindPopup(`<strong style='color: ${opinionColor};'>Opinion:</strong> ${selectedOpinion}<br>
+                        <strong style='color: ${opinionColor};'>Comment:</strong> ${newComment}`)
+            .openPopup();
+        }
+    });
+});
+
+// Function to map opinion to actual colors
+function getColor(opinion) {
+    const colors = {
+        'Positive': '#66bb6a',
+        'Neutral': '#ffca28',
+        'Negative': '#ef5350'
+    };
+    return colors[opinion] || '#fff'; // Default to white if no match
+}
+
 
 // Google Sheets URL
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzJCJPW8hR94ufFarxo8JAQYfXOLDquQ4Kaqtu4N_CZzTeDpYXld997IJevkhDJxG8/exec";
