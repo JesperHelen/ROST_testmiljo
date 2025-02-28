@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HEVI - University Feedback</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon_32.png">
+    <link id="favicon" rel="icon" type="image/png" href="icons/favicon_white.png">
+
     
     
 
@@ -23,28 +24,41 @@
         <div class="title-box">Bangkok</div>
         <div class="help-icon">?</div>
         <div class="tooltip">
-            Select your option on allocation,<br>
-            Write a comment about it,<br>
-            Mark the spot on the map,<br>
-            Click send!
+            1. Select your option on location,<br>
+            2. Write a comment about it,<br>
+            3. Mark the spot on the map,<br>
+            4. Click send!
         </div>
     </div>
 
     <!-- Left Panel -->
     <div class="left-panel">
-        <h2>Feedback</h2>
-        <div class="marker-options-container">
-            <div class="marker-options">
-                <button class="marker-btn green" data-color="Positive">Positive </button>
-                <button class="marker-btn yellow" data-color="Neutral">Neutral</button>
-                <button class="marker-btn red" data-color="Negative">Negative</button>
+        <!-- Background image remains fixed -->
+        <img src="icons/Big_BG.png" alt="Logo" class="background-logo">
+        <div class="left-panel-wrapper">
+            <!-- Scrollable container for interactive content -->
+            <div class="scroll-container">
+                <h2>Feedback</h2>
+                <div class="marker-options-container">
+                    <div class="marker-options">
+                        <button class="marker-btn green" data-color="Positive">Positive</button>
+                        <button class="marker-btn yellow" data-color="Neutral">Neutral</button>
+                        <button class="marker-btn red" data-color="Negative">Negative</button>
+                    </div>
+                    <textarea class="message-box" placeholder="Write your message..."></textarea>
+                </div>
+                <button class="send-btn">Send</button>
             </div>
-            <textarea class="message-box" placeholder="Write your message..."></textarea>
-            
+            <!-- Footer: remains fixed at the bottom and is not part of the scrollable area -->
+            <div class="left-footer">
+                <p>&copy; 2025 HEVI™</p>
+                <p>All rights reserved.</p>
+            </div>
         </div>
-        <button class="send-btn">Send</button>
     </div>
-    
+
+
+        
 
     <!-- Map Area -->
     <div id="map" class="map-container"></div>
@@ -55,5 +69,12 @@
     <div id="notification" class="notification"></div>
     <!-- Powered by Icon -->
     <img src="icons/powered.png" alt="Powered by" class="powered-icon">
+
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading-indicator">
+    <div class="spinner"></div>
+    </div>
+
 </body>
 </html>
